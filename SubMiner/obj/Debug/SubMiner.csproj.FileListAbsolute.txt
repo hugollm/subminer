@@ -1,0 +1,9 @@
+E:\dev\SubMiner\SubMiner\bin\Debug\SubMiner.exe.config
+E:\dev\SubMiner\SubMiner\bin\Debug\SubMiner.exe
+E:\dev\SubMiner\SubMiner\bin\Debug\SubMiner.pdb
+E:\dev\SubMiner\SubMiner\obj\Debug\SubMiner.csprojResolveAssemblyReference.cache
+E:\dev\SubMiner\SubMiner\obj\Debug\SubMiner.MainForm.resources
+E:\dev\SubMiner\SubMiner\obj\Debug\SubMiner.Properties.Resources.resources
+E:\dev\SubMiner\SubMiner\obj\Debug\SubMiner.csproj.GenerateResource.Cache
+E:\dev\SubMiner\SubMiner\obj\Debug\SubMiner.exe
+E:\dev\SubMiner\SubMiner\obj\Debug\SubMiner.pdb
