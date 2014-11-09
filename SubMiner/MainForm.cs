@@ -17,6 +17,12 @@ namespace SubMiner
         public SubtitleFinder SubtitleFinder = new SubtitleFinder();
         public SubtitleDownloader SubtitleDownloader = new SubtitleDownloader();
 
+        public Dictionary<string, string> Languages = new Dictionary<string, string>
+        {
+            {"English", "eng"},
+            {"Portuguese (BR)", "por"}
+        };
+
         public MainForm(string[] args)
         {
             InitializeComponent();
@@ -46,7 +52,7 @@ namespace SubMiner
         {
             startLongProcessing("Searching subtitles...");
 
-            var subtitles = SubtitleFinder.FindForFile(fileField.Text, languageField.Text);
+            var subtitles = SubtitleFinder.FindForFile(fileField.Text, Languages[languageField.Text]);
             fillSubtitleList(subtitles);
             subtitleList.Enabled = true;
 

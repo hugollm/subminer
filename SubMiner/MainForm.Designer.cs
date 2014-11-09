@@ -56,8 +56,8 @@
             this.languageField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.languageField.FormattingEnabled = true;
             this.languageField.Items.AddRange(new object[] {
-            "eng",
-            "por"});
+            "English",
+            "Portuguese (BR)"});
             this.languageField.Location = new System.Drawing.Point(12, 41);
             this.languageField.Name = "languageField";
             this.languageField.Size = new System.Drawing.Size(102, 21);
