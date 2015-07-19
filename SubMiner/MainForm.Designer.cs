@@ -62,6 +62,7 @@
             this.languageField.Name = "languageField";
             this.languageField.Size = new System.Drawing.Size(102, 21);
             this.languageField.TabIndex = 2;
+            this.languageField.SelectedIndexChanged += new System.EventHandler(this.languageField_SelectedIndexChanged);
             // 
             // subtitleList
             // 

@@ -16,6 +16,7 @@ namespace SubMiner
     {
         public SubtitleFinder SubtitleFinder = new SubtitleFinder();
         public SubtitleDownloader SubtitleDownloader = new SubtitleDownloader();
+        public RegistryStore RegistryStore = new RegistryStore("SubMiner");
 
         public Dictionary<string, string> Languages = new Dictionary<string, string>
         {
@@ -34,13 +35,24 @@ namespace SubMiner
 
         private void InitializeFields(string filePath)
         {
-            languageField.SelectedIndex = 0;
-            
+            InitializeLanguage();
+            InitializeFilePath(filePath);
+        }
+
+        private void InitializeLanguage()
+        {
+            var lang = RegistryStore.Get("lang");
+            int intLang = 0;
+            Int32.TryParse(lang, out intLang);
+            languageField.SelectedIndex = intLang;
+        }
+
+        private void InitializeFilePath(string filePath)
+        {
             if (filePath != null && File.Exists(filePath))
             {
                 fileField.Text = filePath;
                 searchButton.Enabled = true;
-                SearchSubtitles();
             }
         }
 
@@ -126,6 +138,11 @@ namespace SubMiner
             SubtitleDownloader.DownloadForFile(subtitle, fileField.Text);
 
             endLongProcessing();
+        }
+
+        private void languageField_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RegistryStore.Set("lang", languageField.SelectedIndex.ToString());
         }
     }
 }

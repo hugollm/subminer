@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Core\FileShellExtension.cs" />
     <Compile Include="Core\MovieHasher.cs" />
+    <Compile Include="Core\RegistryStore.cs" />
     <Compile Include="Core\Subtitle.cs" />
     <Compile Include="Core\SubtitleDownloader.cs" />
     <Compile Include="Core\SubtitleFinder.cs" />
