@@ -23,23 +23,24 @@ namespace SubMiner
             {"Portuguese (BR)", "pob"}
         };
 
-        public MainForm(string[] args)
+        public MainForm(string filePath)
         {
             InitializeComponent();
             MaximizeBox = false;
             MinimizeBox = false;
 
-            InitializeFields(args);
+            InitializeFields(filePath);
         }
 
-        private void InitializeFields(string[] args)
+        private void InitializeFields(string filePath)
         {
             languageField.SelectedIndex = 0;
             
-            if (args.Length > 0 && File.Exists(args[0]))
+            if (filePath != null && File.Exists(filePath))
             {
-                fileField.Text = args[0];
+                fileField.Text = filePath;
                 searchButton.Enabled = true;
+                SearchSubtitles();
             }
         }
 
@@ -52,6 +53,11 @@ namespace SubMiner
         }
 
         private void searchButton_Click(object sender, EventArgs e)
+        {
+            SearchSubtitles();
+        }
+
+        private void SearchSubtitles()
         {
             startLongProcessing("Searching subtitles...");
 

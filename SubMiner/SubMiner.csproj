@@ -50,6 +50,7 @@
     <Compile Include="Core\Subtitle.cs" />
     <Compile Include="Core\SubtitleDownloader.cs" />
     <Compile Include="Core\SubtitleFinder.cs" />
+    <Compile Include="Core\WindowsContextMenu.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
