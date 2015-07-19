@@ -20,12 +20,15 @@ namespace SubMiner
         public Dictionary<string, string> Languages = new Dictionary<string, string>
         {
             {"English", "eng"},
-            {"Portuguese (BR)", "por"}
+            {"Portuguese (BR)", "pob"}
         };
 
         public MainForm(string[] args)
         {
             InitializeComponent();
+            MaximizeBox = false;
+            MinimizeBox = false;
+
             InitializeFields(args);
         }
 
@@ -96,10 +99,23 @@ namespace SubMiner
 
         private void downloadButton_Click(object sender, EventArgs e)
         {
+            var subtitlePath = SubtitleDownloader.SubtitlePathForFile(fileField.Text);
+            if (File.Exists(subtitlePath))
+            {
+                var result = MessageBox.Show("A subtitle was already found. Ovewrite it?", "Subtitle found", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.Cancel)
+                    return;
+            }
+            DownloadSelectedSubtitle();
+        }
+
+        private void DownloadSelectedSubtitle()
+        {
             startLongProcessing("Downloading subtitle...");
-            
+
             var name = subtitleList.SelectedItems[0].SubItems[0].Text;
             var url = subtitleList.SelectedItems[0].SubItems[1].Text;
+
             var subtitle = new Subtitle(name, url);
             SubtitleDownloader.DownloadForFile(subtitle, fileField.Text);
 

@@ -141,7 +141,7 @@
             this.Controls.Add(this.subtitleList);
             this.Controls.Add(this.languageField);
             this.Controls.Add(this.selectFileField);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SubMiner";
