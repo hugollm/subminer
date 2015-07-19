@@ -20,6 +20,13 @@ namespace SubMiner.Core
             Cleanup(zipPath, extractDirectory);
         }
 
+        public string SubtitlePathForFile(string moviePath)
+        {
+            var movieDirectory = Path.GetDirectoryName(moviePath);
+            var movieBaseName = Path.GetFileNameWithoutExtension(moviePath);
+            return Path.Combine(movieDirectory, movieBaseName + ".srt");
+        }
+
         private void DownloadZip(string url, string zipPath)
         {
             using (WebClient Client = new WebClient())
@@ -35,16 +42,16 @@ namespace SubMiner.Core
 
         private void MoveSubtitle(string extractDirectory, string moviePath)
         {
-            var movieDirectory = Path.GetDirectoryName(moviePath);
-            var movieBaseName = Path.GetFileNameWithoutExtension(moviePath);
-            var subtitlePath = Path.Combine(movieDirectory, movieBaseName + ".srt");
+            var subtitlePath = SubtitlePathForFile(moviePath);
+            if (File.Exists(subtitlePath))
+                File.Delete(subtitlePath);
+            File.Move(GetSubtitleFromExtractDirectory(extractDirectory), subtitlePath);
+        }
 
+        private string GetSubtitleFromExtractDirectory(string extractDirectory)
+        {
             var subfiles = Directory.GetFiles(extractDirectory, "*.srt");
-            var subfile = "";
-            if (subfiles.Length > 0)
-                subfile = subfiles[0];
-            if (subfile != "")
-                File.Move(subfile, subtitlePath);
+            return subfiles[0];
         }
 
         private void Cleanup(string zipPath, string extractDirectory)
