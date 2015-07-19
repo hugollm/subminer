@@ -206,3 +206,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Inno Setup Output Directory
+Output
