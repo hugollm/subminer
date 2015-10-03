@@ -15,7 +15,7 @@ namespace SubMiner.Core
             var regCommand = Registry.ClassesRoot.CreateSubKey(fileType + "\\shell\\" + key + "\\command");
 
             regEntry.SetValue(null, title);
-            regCommand.SetValue(null, command + " %L");
+            regCommand.SetValue(null, command + " \"%L\"");
         }
 
         public void RemoveEntry(string fileType, string key)
