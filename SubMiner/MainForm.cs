@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SubMiner.Core;
+using System.Net;
 
 namespace SubMiner
 {
@@ -72,11 +73,17 @@ namespace SubMiner
         private void SearchSubtitles()
         {
             startLongProcessing("Searching subtitles...");
-
-            var subtitles = SubtitleFinder.FindForFile(fileField.Text, Languages[languageField.Text]);
+            var subtitles = new List<Subtitle>();
+            try
+            {
+                subtitles = SubtitleFinder.FindForFile(fileField.Text, Languages[languageField.Text]);
+            }
+            catch (WebException)
+            {
+                MessageBox.Show("Connection failure.");
+            }
             fillSubtitleList(subtitles);
             subtitleList.Enabled = true;
-
             endLongProcessing();
         }
 
@@ -135,8 +142,14 @@ namespace SubMiner
             var url = subtitleList.SelectedItems[0].SubItems[1].Text;
 
             var subtitle = new Subtitle(name, url);
-            SubtitleDownloader.DownloadForFile(subtitle, fileField.Text);
-
+            try
+            {
+                SubtitleDownloader.DownloadForFile(subtitle, fileField.Text);
+            }
+            catch (WebException)
+            {
+                MessageBox.Show("Connection failure.");
+            }
             endLongProcessing();
         }
 
