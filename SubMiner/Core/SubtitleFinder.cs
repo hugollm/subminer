@@ -20,7 +20,7 @@ namespace SubMiner.Core
             var url = string.Format("http://www.opensubtitles.org/en/search/sublanguageid-{0}/moviehash-{1}/xml", lang, hash);
             var response = this.GetUrlContents(url);
 
-            var pattern = @"<subtitle>.+?'(http:\/\/dl\..+?)'.+?<MovieName><!\[CDATA\[(.+?)]]><\/MovieName>.+?<\/subtitle>";
+            var pattern = @"<subtitle>.+?'http:\/\/dl\..+?'.+?'>(.+?)</IDSubtitle>.+?<MovieName><!\[CDATA\[(.+?)]]><\/MovieName>.+?<\/subtitle>";
             var regex = new Regex(pattern, RegexOptions.Singleline);
             return regex.Matches(response);
         }
@@ -40,11 +40,16 @@ namespace SubMiner.Core
             foreach (Match match in matches)
             {
                 var name = match.Groups[2].ToString();
-                var url = match.Groups[1].ToString();
+                var url = BuildSubtitleUrl(match.Groups[1].ToString());
                 var subtitle = new Subtitle(name, url);
                 subtitles.Add(subtitle);
             }
             return subtitles;
+        }
+
+        private string BuildSubtitleUrl(string subId)
+        {
+            return "http://dl.opensubtitles.org/download/sub/vrf-" + subId + "/" + subId;
         }
     }
 }
