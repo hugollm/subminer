@@ -19,7 +19,7 @@ namespace SubMiner
         public SubtitleDownloader SubtitleDownloader = new SubtitleDownloader();
         public RegistryStore RegistryStore = new RegistryStore("SubMiner");
 
-        string Version = "1.0.3-rc6";
+        string Version = "1.1.0";
         bool DownloadFirstAndClose = false;
 
         public Dictionary<string, string> Languages = new Dictionary<string, string>
