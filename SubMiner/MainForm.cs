@@ -34,6 +34,13 @@ namespace SubMiner
             InitializeFields(filePath);
         }
 
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (fileField.Text.Trim() != "")
+                SearchSubtitles();
+        }
+
         private void InitializeFields(string filePath)
         {
             InitializeLanguage();
