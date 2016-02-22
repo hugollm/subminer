@@ -19,21 +19,26 @@ namespace SubMiner
         public SubtitleDownloader SubtitleDownloader = new SubtitleDownloader();
         public RegistryStore RegistryStore = new RegistryStore("SubMiner");
 
+        string Version = "1.0.3-rc6";
+        bool DownloadFirstAndClose = false;
+
         public Dictionary<string, string> Languages = new Dictionary<string, string>
         {
             {"English", "eng"},
             {"Portuguese (BR)", "pob"}
         };
 
-        public MainForm(string filePath)
+        public MainForm(string filePath, bool downloadFirstAndClose)
         {
             InitializeComponent();
+
+            Text += " " + Version;
             MaximizeBox = false;
             MinimizeBox = false;
 
+            DownloadFirstAndClose = downloadFirstAndClose;
             InitializeFields(filePath);
         }
-
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
@@ -92,6 +97,19 @@ namespace SubMiner
             fillSubtitleList(subtitles);
             subtitleList.Enabled = true;
             endLongProcessing();
+            DownloadFirstAndCloseIfRequested();
+        }
+
+        private void DownloadFirstAndCloseIfRequested()
+        {
+            if (!DownloadFirstAndClose || subtitleList.Items.Count == 0)
+                return;
+            var name = subtitleList.Items[0].SubItems[0].Text;
+            var url = subtitleList.Items[0].SubItems[1].Text;
+            if (!OverwriteConfirmation())
+                return;
+            DownloadSubtitle(name, url);
+            Application.Exit();
         }
 
         private void fillSubtitleList(List<Subtitle> subtitles)
@@ -131,23 +149,32 @@ namespace SubMiner
 
         private void downloadButton_Click(object sender, EventArgs e)
         {
+            if (!OverwriteConfirmation())
+                return;
+            DownloadSelectedSubtitle();
+        }
+
+        private bool OverwriteConfirmation()
+        {
             var subtitlePath = SubtitleDownloader.SubtitlePathForFile(fileField.Text);
             if (File.Exists(subtitlePath))
             {
                 var result = MessageBox.Show("A subtitle was already found. Ovewrite it?", "Subtitle found", MessageBoxButtons.OKCancel);
-                if (result == DialogResult.Cancel)
-                    return;
+                return result != DialogResult.Cancel;
             }
-            DownloadSelectedSubtitle();
+            return true;
         }
 
         private void DownloadSelectedSubtitle()
         {
-            startLongProcessing("Downloading subtitle...");
-
             var name = subtitleList.SelectedItems[0].SubItems[0].Text;
             var url = subtitleList.SelectedItems[0].SubItems[1].Text;
+            DownloadSubtitle(name, url);
+        }
 
+        private void DownloadSubtitle(string name, string url)
+        {
+            startLongProcessing("Downloading subtitle...");
             var subtitle = new Subtitle(name, url);
             try
             {
