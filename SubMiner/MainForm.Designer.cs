@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.selectFileField = new System.Windows.Forms.Button();
             this.languageField = new System.Windows.Forms.ComboBox();
@@ -46,7 +47,7 @@
             this.selectFileField.Name = "selectFileField";
             this.selectFileField.Size = new System.Drawing.Size(102, 23);
             this.selectFileField.TabIndex = 1;
-            this.selectFileField.Text = "Select File...";
+            this.selectFileField.Text = "Select &File...";
             this.selectFileField.UseVisualStyleBackColor = true;
             this.selectFileField.Click += new System.EventHandler(this.selectFileField_Click);
             // 
@@ -61,7 +62,7 @@
             this.languageField.Location = new System.Drawing.Point(12, 41);
             this.languageField.Name = "languageField";
             this.languageField.Size = new System.Drawing.Size(102, 21);
-            this.languageField.TabIndex = 2;
+            this.languageField.TabIndex = 3;
             this.languageField.SelectedIndexChanged += new System.EventHandler(this.languageField_SelectedIndexChanged);
             // 
             // subtitleList
@@ -71,18 +72,20 @@
             this.urlHeader});
             this.subtitleList.Enabled = false;
             this.subtitleList.FullRowSelect = true;
+            this.subtitleList.HideSelection = false;
             this.subtitleList.Location = new System.Drawing.Point(12, 70);
             this.subtitleList.MultiSelect = false;
             this.subtitleList.Name = "subtitleList";
             this.subtitleList.Size = new System.Drawing.Size(612, 318);
-            this.subtitleList.TabIndex = 3;
+            this.subtitleList.TabIndex = 6;
             this.subtitleList.UseCompatibleStateImageBehavior = false;
             this.subtitleList.View = System.Windows.Forms.View.Details;
             this.subtitleList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.subtitleList_ItemSelectionChanged);
+            this.subtitleList.DoubleClick += new System.EventHandler(this.subtitleList_DoubleClick);
             // 
             // nameHeader
             // 
-            this.nameHeader.Text = "Subtitle";
+            this.nameHeader.Text = "Subtitle Name";
             this.nameHeader.Width = 300;
             // 
             // urlHeader
@@ -96,8 +99,8 @@
             this.downloadButton.Location = new System.Drawing.Point(201, 40);
             this.downloadButton.Name = "downloadButton";
             this.downloadButton.Size = new System.Drawing.Size(75, 23);
-            this.downloadButton.TabIndex = 4;
-            this.downloadButton.Text = "Download";
+            this.downloadButton.TabIndex = 5;
+            this.downloadButton.Text = "&Download";
             this.downloadButton.UseVisualStyleBackColor = true;
             this.downloadButton.Click += new System.EventHandler(this.downloadButton_Click);
             // 
@@ -107,7 +110,7 @@
             this.fileField.Name = "fileField";
             this.fileField.ReadOnly = true;
             this.fileField.Size = new System.Drawing.Size(504, 20);
-            this.fileField.TabIndex = 5;
+            this.fileField.TabIndex = 2;
             // 
             // searchButton
             // 
@@ -115,8 +118,8 @@
             this.searchButton.Location = new System.Drawing.Point(120, 40);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(75, 23);
-            this.searchButton.TabIndex = 6;
-            this.searchButton.Text = "Search";
+            this.searchButton.TabIndex = 4;
+            this.searchButton.Text = "&Search";
             this.searchButton.UseVisualStyleBackColor = true;
             this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
             // 
@@ -143,6 +146,7 @@
             this.Controls.Add(this.languageField);
             this.Controls.Add(this.selectFileField);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SubMiner";

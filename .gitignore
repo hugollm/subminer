@@ -209,3 +209,4 @@ $RECYCLE.BIN/
 
 # Inno Setup Output Directory
 Output
+.vs/

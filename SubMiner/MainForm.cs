@@ -1,25 +1,21 @@
-﻿using System;
-using System.IO;
+﻿using SubMiner.Core;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using SubMiner.Core;
+using System.IO;
 using System.Net;
+using System.Windows.Forms;
 
 namespace SubMiner
 {
     public partial class MainForm : Form
     {
+        private const string LanguageRegistryName = "lang";
+
         public SubtitleFinder SubtitleFinder = new SubtitleFinder();
         public SubtitleDownloader SubtitleDownloader = new SubtitleDownloader();
         public RegistryStore RegistryStore = new RegistryStore("SubMiner");
 
-        string Version = "1.1.0";
+        string Version = "1.1.1";
         bool DownloadFirstAndClose = false;
 
         public Dictionary<string, string> Languages = new Dictionary<string, string>
@@ -42,8 +38,10 @@ namespace SubMiner
 
         private void MainForm_Shown(object sender, EventArgs e)
         {
-            if (fileField.Text.Trim() != "")
+            if (!string.IsNullOrWhiteSpace(fileField.Text))
+            {
                 SearchSubtitles();
+            }
         }
 
         private void InitializeFields(string filePath)
@@ -54,15 +52,14 @@ namespace SubMiner
 
         private void InitializeLanguage()
         {
-            var lang = RegistryStore.Get("lang");
-            int intLang = 0;
-            Int32.TryParse(lang, out intLang);
+            var lang = RegistryStore.Get(LanguageRegistryName);
+            Int32.TryParse(lang, out int intLang);
             languageField.SelectedIndex = intLang;
         }
 
         private void InitializeFilePath(string filePath)
         {
-            if (filePath != null && File.Exists(filePath))
+            if (File.Exists(filePath))
             {
                 fileField.Text = filePath;
                 searchButton.Enabled = true;
@@ -73,8 +70,14 @@ namespace SubMiner
         {
             fileDialog.ShowDialog();
             fileField.Text = fileDialog.FileName;
-            if (fileField.Text != "")
+            if (!string.IsNullOrWhiteSpace(fileField.Text))
+            {
+                statusLabel.Text = "";
+                downloadButton.Enabled = false;
                 searchButton.Enabled = true;
+                clearSubtitleList();
+                SearchSubtitles();
+            }
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -90,9 +93,9 @@ namespace SubMiner
             {
                 subtitles = SubtitleFinder.FindForFile(fileField.Text, Languages[languageField.Text]);
             }
-            catch (WebException)
+            catch (WebException wex)
             {
-                MessageBox.Show("Connection failure.");
+                MessageBox.Show("Connection failure." + Environment.NewLine + wex.Message);
             }
             fillSubtitleList(subtitles);
             subtitleList.Enabled = true;
@@ -103,11 +106,15 @@ namespace SubMiner
         private void DownloadFirstAndCloseIfRequested()
         {
             if (!DownloadFirstAndClose || subtitleList.Items.Count == 0)
+            {
                 return;
+            }
             var name = subtitleList.Items[0].SubItems[0].Text;
             var url = subtitleList.Items[0].SubItems[1].Text;
             if (!OverwriteConfirmation())
+            {
                 return;
+            }
             DownloadSubtitle(name, url);
             Application.Exit();
         }
@@ -121,6 +128,18 @@ namespace SubMiner
                 var item = new ListViewItem(row);
                 subtitleList.Items.Add(item);
             }
+            statusLabel.Text = "# of subtitle files found: " + subtitles.Count;
+        }
+
+        private void clearSubtitleList()
+        {
+            for (int i = subtitleList.Items.Count - 1; i >= 0; i--)
+            {
+                if (subtitleList.Items[i].Selected)
+                {
+                    subtitleList.Items[i].Remove();
+                }
+            }
         }
 
         private void startLongProcessing(string status)
@@ -133,24 +152,17 @@ namespace SubMiner
 
         private void endLongProcessing()
         {
-            statusLabel.Text = "...";
-            statusLabel.Visible = false;
             this.Enabled = true;
             Refresh();
         }
 
         private void subtitleList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (subtitleList.SelectedItems.Count > 0)
-                downloadButton.Enabled = true;
-            else
-                downloadButton.Enabled = false;
+            downloadButton.Enabled = (subtitleList.SelectedItems.Count > 0);
         }
 
         private void downloadButton_Click(object sender, EventArgs e)
         {
-            if (!OverwriteConfirmation())
-                return;
             DownloadSelectedSubtitle();
         }
 
@@ -159,7 +171,8 @@ namespace SubMiner
             var subtitlePath = SubtitleDownloader.SubtitlePathForFile(fileField.Text);
             if (File.Exists(subtitlePath))
             {
-                var result = MessageBox.Show("A subtitle was already found. Ovewrite it?", "Subtitle found", MessageBoxButtons.OKCancel);
+                var result = MessageBox.Show("A subtitle file already exists. Overwrite it?",
+                    "Subtitle File Found", MessageBoxButtons.OKCancel);
                 return result != DialogResult.Cancel;
             }
             return true;
@@ -167,6 +180,10 @@ namespace SubMiner
 
         private void DownloadSelectedSubtitle()
         {
+            if (!OverwriteConfirmation())
+            {
+                return;
+            }
             var name = subtitleList.SelectedItems[0].SubItems[0].Text;
             var url = subtitleList.SelectedItems[0].SubItems[1].Text;
             DownloadSubtitle(name, url);
@@ -179,17 +196,23 @@ namespace SubMiner
             try
             {
                 SubtitleDownloader.DownloadForFile(subtitle, fileField.Text);
+                statusLabel.Text = "Download complete.";
             }
-            catch (WebException)
+            catch (WebException wex)
             {
-                MessageBox.Show("Connection failure.");
+                MessageBox.Show("Connection failure." + Environment.NewLine + wex.Message);
             }
             endLongProcessing();
         }
 
         private void languageField_SelectedIndexChanged(object sender, EventArgs e)
         {
-            RegistryStore.Set("lang", languageField.SelectedIndex.ToString());
+            RegistryStore.Set(LanguageRegistryName, languageField.SelectedIndex.ToString());
+        }
+
+        private void subtitleList_DoubleClick(object sender, EventArgs e)
+        {
+            DownloadSelectedSubtitle();
         }
     }
 }

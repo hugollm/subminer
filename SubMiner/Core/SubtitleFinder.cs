@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace SubMiner.Core
@@ -31,7 +30,9 @@ namespace SubMiner.Core
             using (var stream = response.GetResponseStream())
             using (var buffer = new BufferedStream(stream))
             using (var reader = new StreamReader(buffer))
+            {
                 return reader.ReadToEnd();
+            }
         }
 
         private List<Subtitle> CreateSubtitlesFromMatches(MatchCollection matches)

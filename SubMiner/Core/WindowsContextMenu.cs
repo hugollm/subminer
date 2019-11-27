@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace SubMiner.Core
 {
@@ -25,10 +20,14 @@ namespace SubMiner.Core
 
         private string MakeCommand(string command, string[] extraArguments)
         {
-            command = command + " \"%L\"";
+            command += " \"%L\"";
             if (extraArguments != null)
+            {
                 foreach (var arg in extraArguments)
-                    command += " \""+ arg +"\"";
+                {
+                    command += " \"" + arg + "\"";
+                }
+            }
             return command;
         }
     }
