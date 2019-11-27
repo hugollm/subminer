@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
-using System.Text.RegularExpressions;
+using System.Net;
 
 namespace SubMiner.Core
 {
     public class SubtitleDownloader
     {
+        private const string Extension = ".srt";
+
         public void DownloadForFile(Subtitle subtitle, string moviePath)
         {
             var zipPath = Path.GetTempFileName();
@@ -24,7 +23,7 @@ namespace SubMiner.Core
         {
             var movieDirectory = Path.GetDirectoryName(moviePath);
             var movieBaseName = Path.GetFileNameWithoutExtension(moviePath);
-            return Path.Combine(movieDirectory, movieBaseName + ".srt");
+            return Path.Combine(movieDirectory, movieBaseName + Extension);
         }
 
         private void DownloadZip(string url, string zipPath)
@@ -44,13 +43,15 @@ namespace SubMiner.Core
         {
             var subtitlePath = SubtitlePathForFile(moviePath);
             if (File.Exists(subtitlePath))
+            {
                 File.Delete(subtitlePath);
+            }
             File.Move(GetSubtitleFromExtractDirectory(extractDirectory), subtitlePath);
         }
 
         private string GetSubtitleFromExtractDirectory(string extractDirectory)
         {
-            var subfiles = Directory.GetFiles(extractDirectory, "*.srt");
+            var subfiles = Directory.GetFiles(extractDirectory, "*" + Extension);
             return subfiles[0];
         }
 

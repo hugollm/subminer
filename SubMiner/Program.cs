@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SubMiner.Core;
+using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SubMiner.Core;
 
 namespace SubMiner
 {
@@ -17,11 +14,17 @@ namespace SubMiner
             var arg2 = args.Length > 1 ? args[1] : null;
 
             if (arg1 == "--install-context")
+            {
                 InstallContext();
+            }
             else if (arg1 == "--uninstall-context")
+            {
                 UninstallContext();
+            }
             else
+            {
                 RunGui(arg1, arg2 != null);
+            }
         }
 
         private static void InstallContext()

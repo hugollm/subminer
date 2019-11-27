@@ -18,27 +18,30 @@ namespace SubMiner.Core
 
         public static string ComputeMovieHash(Stream input)
         {
-            long lhash, streamsize;
+            const int Max = 65536;
+
+            long hash;
+            long streamsize;
             streamsize = input.Length;
-            lhash = streamsize;
+            hash = streamsize;
 
             long i = 0;
             byte[] buffer = new byte[sizeof(long)];
-            while (i < 65536 / sizeof(long) && (input.Read(buffer, 0, sizeof(long)) > 0))
+            while (i < Max / sizeof(long) && (input.Read(buffer, 0, sizeof(long)) > 0))
             {
                 i++;
-                lhash += BitConverter.ToInt64(buffer, 0);
+                hash += BitConverter.ToInt64(buffer, 0);
             }
 
-            input.Position = Math.Max(0, streamsize - 65536);
+            input.Position = Math.Max(0, streamsize - Max);
             i = 0;
-            while (i < 65536 / sizeof(long) && (input.Read(buffer, 0, sizeof(long)) > 0))
+            while (i < Max / sizeof(long) && (input.Read(buffer, 0, sizeof(long)) > 0))
             {
                 i++;
-                lhash += BitConverter.ToInt64(buffer, 0);
+                hash += BitConverter.ToInt64(buffer, 0);
             }
             input.Close();
-            byte[] result = BitConverter.GetBytes(lhash);
+            byte[] result = BitConverter.GetBytes(hash);
             Array.Reverse(result);
             return BytesToHexadecimal(result);
         }
